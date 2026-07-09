@@ -1,0 +1,11 @@
+# P10 v1.0 — gridstatus.io data NOT committed (Licensed API, ToU)
+audits/*/raw_data/*.csv
+audits/*/raw_data/*.parquet
+
+# API keys
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
