@@ -4,7 +4,7 @@
 **Status:** PRE-REGISTRATION — frozen before data acquisition. No SCED data downloaded at commit time.
 **Author:** Ivan Nestorov, VolMax Studio Lab
 **Frozen at:** 2026-07-09T19:54:00+02:00 (amended: +L0d entity flag, +Rule CV, +window-start justification — zero data downloaded at both commits)
-**Commit hash:** (set by git — this file must be committed before any download begins)
+**Commit hash:** `21809f9f68e7a037b9fe20a68c40615efcfadcaa` (post-hoc commit — data pulled before git init; pre-analysis state; see selection_rationale.md § Pre-Registration Commit Gap)
 
 ---
 
@@ -14,7 +14,7 @@
 **Verbatim:** "240 MW / 480 MWh"
 **Claimant:** esVolta, LP
 **Source:** https://www.esvolta.com/projects (section: Anole, Seagoville TX)
-**Archive snapshot:** https://web.archive.org/web/20260512181037/https://www.esvolta.com/projects (captured 2026-05-12T18:10:37Z — page confirmed live with Anole section and 240 MW / 480 MWh claim)
+**Archive snapshot:** https://web.archive.org/web/20260512181037/https://www.esvolta.com/projects (captured 2026-05-12T18:10:37Z — claim "240 MW / 480 MWh" **verified present** in snapshot: verbatim text "Capacity 240 MW / 480 MWh — Status Operating since July 2025")
 **Publication date:** Page current as of 2026-07-08; COD press release dated 2025-07-30
 
 Restated as falsifiable sub-claims:
