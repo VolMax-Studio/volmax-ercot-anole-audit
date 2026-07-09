@@ -1,0 +1,94 @@
+name: ERCOT NP3-965-ER Primary ZIP Retrieval
+
+on:
+  workflow_dispatch:
+    inputs:
+      month:
+        description: "Month to retrieve (YYYY-MM, e.g. 2026-01)"
+        required: false
+        default: "probe"
+
+jobs:
+  retrieve-primary-zip:
+    runs-on: ubuntu-latest
+    name: Probe ERCOT MIS access from US runner
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Probe ERCOT MIS availability from US runner IP
+        id: probe
+        run: |
+          echo "Runner IP:"
+          curl -s https://api.ipify.org && echo ""
+
+          echo ""
+          echo "Testing ERCOT MIS NP3-965-ER report list..."
+          HTTP_CODE=$(curl -s -o /tmp/ercot_probe.html -w "%{http_code}" \
+            --max-time 30 \
+            "https://mis.ercot.com/misapp/GetReports.do?reportTypeId=13052")
+          echo "HTTP status: $HTTP_CODE"
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "MIS_ACCESSIBLE=true" >> $GITHUB_OUTPUT
+            echo "✅ ERCOT MIS accessible from this runner"
+            head -c 2000 /tmp/ercot_probe.html | grep -i "NP3-965\|zip\|download" | head -20 || echo "(no ZIP links in first 2000 bytes)"
+          else
+            echo "MIS_ACCESSIBLE=false" >> $GITHUB_OUTPUT
+            echo "❌ ERCOT MIS returned HTTP $HTTP_CODE — WAF or geo-block active on datacenter IPs"
+            cat /tmp/ercot_probe.html | head -50
+          fi
+
+      - name: Attempt ZIP download (if MIS accessible)
+        if: steps.probe.outputs.MIS_ACCESSIBLE == 'true'
+        run: |
+          mkdir -p audits/US-TX-ANOL-001/ercot_primary_zips
+
+          # ERCOT MIS NP3-965-ER: download December 2025 ZIP
+          # Exact URL pattern depends on MIS portal response — adjust after probe
+          echo "Attempting December 2025 ZIP download..."
+          curl -s -o /tmp/ercot_zip_probe.zip -w "HTTP %{http_code} | Size: %{size_download} bytes" \
+            --max-time 60 \
+            "https://mis.ercot.com/misapp/servlets/IceDocListWicketPage?reportTypeId=13052&reportTitle=NP3-965-ER&showHTMLView=&mimicKey" \
+            || echo "Direct download URL needs adjustment — check probe HTML for actual links"
+
+      - name: Hash and record (if ZIP downloaded)
+        if: steps.probe.outputs.MIS_ACCESSIBLE == 'true'
+        run: |
+          if [ -f /tmp/ercot_zip_probe.zip ] && [ -s /tmp/ercot_zip_probe.zip ]; then
+            SHA=$(sha256sum /tmp/ercot_zip_probe.zip | cut -d' ' -f1)
+            SIZE=$(stat -c%s /tmp/ercot_zip_probe.zip)
+            echo "SHA-256: $SHA"
+            echo "Size: $SIZE bytes"
+            cp /tmp/ercot_zip_probe.zip audits/US-TX-ANOL-001/ercot_primary_zips/probe_dec2025.zip
+            echo "{\"sha256\": \"$SHA\", \"size_bytes\": $SIZE, \"runner\": \"ubuntu-latest\", \"run_id\": \"$GITHUB_RUN_ID\"}" \
+              > audits/US-TX-ANOL-001/ercot_primary_zips/probe_manifest.json
+          else
+            echo "No valid ZIP downloaded."
+          fi
+
+      - name: Report result
+        if: always()
+        run: |
+          echo "=========================="
+          echo "ERCOT MIS ACCESS PROBE"
+          echo "=========================="
+          echo "MIS accessible: ${{ steps.probe.outputs.MIS_ACCESSIBLE }}"
+          echo ""
+          echo "Interpretation:"
+          echo "  true  → Full retrieval pipeline possible via GitHub Actions"
+          echo "          → Class A reinstatement path: add full ZIP download step"
+          echo "  false → Datacenter IPs also blocked by ERCOT WAF"
+          echo "          → Anchor stays Class B; use cross-check disclosure"
+          echo "=========================="
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ercot-mis-probe-${{ github.run_id }}
+          path: |
+            /tmp/ercot_probe.html
+            audits/US-TX-ANOL-001/ercot_primary_zips/
+          retention-days: 90

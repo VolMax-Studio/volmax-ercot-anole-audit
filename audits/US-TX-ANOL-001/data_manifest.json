@@ -1,0 +1,127 @@
+{
+  "protocol": "P10 v1.0",
+  "audit_id": "US-TX-ANOL-001",
+  "resource_name": "ANOL_ESS_ESR1",
+  "dataset": "ercot_sced_esr_60_day",
+  "window_start": "2025-12-05",
+  "window_end": "2026-04-30",
+  "pulled_at_utc": "2026-07-09T18:07:04.836064+00:00",
+  "correction_dates_flagged": [
+    "2025-12-05",
+    "2025-12-06"
+  ],
+  "files": [
+    {
+      "filename": "ANOL_ESR1_SCED_2025-12-05_2025-12-31.csv",
+      "chunk_start": "2025-12-05",
+      "chunk_end": "2025-12-31",
+      "sha256": "3b4ba1056e1cb3f5a111a1528de6fc004f604ba9194496e215bbb3aeffa5759d",
+      "row_count": 7800,
+      "correction_dates_in_chunk": [
+        "2025-12-06",
+        "2025-12-05"
+      ],
+      "status": "pulled",
+      "query_params": {
+        "filter_column": "resource_name",
+        "filter_value": "ANOL_ESS_ESR1",
+        "start_time": "2025-12-05T00:00:00Z",
+        "end_time": "2025-12-31T23:59:59Z",
+        "limit": 50000,
+        "return_format": "json"
+      }
+    },
+    {
+      "filename": "ANOL_ESR1_SCED_2026-01-01_2026-01-31.csv",
+      "chunk_start": "2026-01-01",
+      "chunk_end": "2026-01-31",
+      "sha256": "97133b07aae2ad221b85a924cb09391b00d9f12a93fef27e4b532085feb5e400",
+      "row_count": 9076,
+      "correction_dates_in_chunk": [],
+      "status": "pulled",
+      "query_params": {
+        "filter_column": "resource_name",
+        "filter_value": "ANOL_ESS_ESR1",
+        "start_time": "2026-01-01T00:00:00Z",
+        "end_time": "2026-01-31T23:59:59Z",
+        "limit": 50000,
+        "return_format": "json"
+      }
+    },
+    {
+      "filename": "ANOL_ESR1_SCED_2026-02-01_2026-02-28.csv",
+      "chunk_start": "2026-02-01",
+      "chunk_end": "2026-02-28",
+      "sha256": "9f4897ca5336ad7a3180f5e966edec96101edc2a8f6ee1682594ce4007369e6e",
+      "row_count": 8182,
+      "correction_dates_in_chunk": [],
+      "status": "pulled",
+      "query_params": {
+        "filter_column": "resource_name",
+        "filter_value": "ANOL_ESS_ESR1",
+        "start_time": "2026-02-01T00:00:00Z",
+        "end_time": "2026-02-28T23:59:59Z",
+        "limit": 50000,
+        "return_format": "json"
+      }
+    },
+    {
+      "filename": "ANOL_ESR1_SCED_2026-03-01_2026-03-31.csv",
+      "chunk_start": "2026-03-01",
+      "chunk_end": "2026-03-31",
+      "sha256": "f42310090f3d79e030ccdd53060160bfbe30f163552f5b768bd10884ab86f6fb",
+      "row_count": 9046,
+      "correction_dates_in_chunk": [],
+      "status": "pulled",
+      "query_params": {
+        "filter_column": "resource_name",
+        "filter_value": "ANOL_ESS_ESR1",
+        "start_time": "2026-03-01T00:00:00Z",
+        "end_time": "2026-03-31T23:59:59Z",
+        "limit": 50000,
+        "return_format": "json"
+      }
+    },
+    {
+      "filename": "ANOL_ESR1_SCED_2026-04-01_2026-04-30.csv",
+      "chunk_start": "2026-04-01",
+      "chunk_end": "2026-04-30",
+      "sha256": "2dff414e8434d3147792a09dce3a5ecdeb28b26bbd9112c4f2483c4133864b01",
+      "row_count": 8814,
+      "correction_dates_in_chunk": [],
+      "status": "pulled",
+      "query_params": {
+        "filter_column": "resource_name",
+        "filter_value": "ANOL_ESS_ESR1",
+        "start_time": "2026-04-01T00:00:00Z",
+        "end_time": "2026-04-30T23:59:59Z",
+        "limit": 50000,
+        "return_format": "json"
+      }
+    }
+  ],
+  "total_rows": 42918,
+  "endpoint_url": "https://api.gridstatus.io/v1/datasets/ercot_sced_esr_60_day/query",
+  "filter_column": "resource_name",
+  "filter_value": "ANOL_ESS_ESR1",
+  "query_params_template": {
+    "filter_column": "resource_name",
+    "filter_value": "ANOL_ESS_ESR1",
+    "start_time": "<chunk_start>T00:00:00Z",
+    "end_time": "<chunk_end>T23:59:59Z",
+    "limit": 50000,
+    "page": "<N>",
+    "return_format": "json"
+  },
+  "provenance_note": "Provenance chain terminates at gridstatus.io; primary ERCOT artifact (NP3-965-ER correction ZIP) not independently hashed \u2014 WAF (Working As Found). SHA-256 hashes pin gridstatus.io rendering at pull time, not the upstream ERCOT ZIP. See sources.md \u00a7 Provenance Limitation.",
+  "facility_entity_check": {
+    "query": "filter_column=dme&filter_value=YANOLE&limit=1000",
+    "result_distinct_resource_names": [
+      "ANOL_ESS_ESR1"
+    ],
+    "conclusion": "ANOL_ESS_ESR1 is the sole resource ID for dme=YANOLE. L0d flag closed.",
+    "checked_at_utc": "2026-07-09T18:14:03.668024+00:00"
+  },
+  "manifest_version": "2",
+  "manifest_amended_at_utc": "2026-07-09T18:14:03.668041+00:00"
+}

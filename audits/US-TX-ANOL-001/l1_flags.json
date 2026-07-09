@@ -1,0 +1,173 @@
+{
+  "generated_at_utc": "2026-07-09T18:14:10.648876+00:00",
+  "total_rows_pre_dedup": 42918,
+  "checks": {
+    "duplicates": {
+      "total_rows_pre_dedup": 42918,
+      "unique_timestamps": 42918,
+      "duplicate_timestamps": 0,
+      "duplicate_extra_rows": 0,
+      "sample": [],
+      "flag": "PASS"
+    },
+    "gaps": {
+      "total_gaps": 42917,
+      "mode_gap_seconds": 300,
+      "mode_gap_count": 12259,
+      "mode_gap_pct": 28.56,
+      "lt_300s": 16507,
+      "eq_300s": 12259,
+      "gt_300s_lt_600s": 14146,
+      "gte_600s": 5,
+      "largest_gap_seconds": 1003,
+      "largest_gap_minutes": 16.7,
+      "gaps_gte_30min": [],
+      "flag": "WARN"
+    },
+    "dec_density": {
+      "dec_total_rows": 7800,
+      "dec_days": 27,
+      "dec_avg_per_day": 288.9,
+      "jan_avg_per_day": 292.8,
+      "dec_05_rows": 217,
+      "dec_06_rows": 291,
+      "dec_05_06_avg": 254.0,
+      "dec_07_31_avg": 291.7,
+      "deficit_concentrated_in_first_48h": true,
+      "interpretation": "Deficit is in Dec 05-06 (correction dates + RTC+B go-live)",
+      "daily_dec": {
+        "2025-12-05": 217,
+        "2025-12-06": 291,
+        "2025-12-07": 291,
+        "2025-12-08": 295,
+        "2025-12-09": 295,
+        "2025-12-10": 290,
+        "2025-12-11": 295,
+        "2025-12-12": 298,
+        "2025-12-13": 288,
+        "2025-12-14": 295,
+        "2025-12-15": 291,
+        "2025-12-16": 293,
+        "2025-12-17": 291,
+        "2025-12-18": 292,
+        "2025-12-19": 291,
+        "2025-12-20": 289,
+        "2025-12-21": 291,
+        "2025-12-22": 289,
+        "2025-12-23": 291,
+        "2025-12-24": 294,
+        "2025-12-25": 289,
+        "2025-12-26": 289,
+        "2025-12-27": 290,
+        "2025-12-28": 288,
+        "2025-12-29": 291,
+        "2025-12-30": 288,
+        "2025-12-31": 298
+      },
+      "flag": "WARN"
+    },
+    "utc_cpt": {
+      "dec_05_total_rows": 217,
+      "dec_05_before_0600z": 0,
+      "dec_05_after_0600z": 217,
+      "earliest_row_utc": "2025-12-05T06:00:19+00:00",
+      "ercot_cpt_offset_hours": -6,
+      "ercot_day_start_utc": "T06:00:00Z",
+      "has_pre_ercot_day_data": false,
+      "note": "No pre-06:00Z rows on Dec 05. UTC and CPT windows are aligned for this day.",
+      "flag": "PASS"
+    },
+    "status": {
+      "total_rows": 42918,
+      "distinct_values": {
+        "ON": {
+          "count": 42422,
+          "pct": 98.84
+        },
+        "ONTEST": {
+          "count": 311,
+          "pct": 0.72
+        },
+        "OUT": {
+          "count": 123,
+          "pct": 0.29
+        },
+        "NULL": {
+          "count": 60,
+          "pct": 0.14
+        },
+        "ONOS": {
+          "count": 2,
+          "pct": 0.0
+        }
+      },
+      "on_rows": 42422,
+      "out_rows": 123,
+      "note": "F1/F2 falsification tests should filter to ON rows only. OUT rows: asset not dispatched \u2014 telemetered_net_output not meaningful for capacity claims. ONTEST/ONRR: review before inclusion in F-tests.",
+      "flag": "INFO"
+    },
+    "nulls": {
+      "total_rows": 42918,
+      "columns": {
+        "sced_timestamp_utc": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "telemetered_net_output": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "base_point": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "hsl": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "lsl": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "soc": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "min_soc": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "max_soc": {
+          "null_count": 0,
+          "null_pct": 0.0,
+          "flag": "PASS"
+        },
+        "telemetered_resource_status": {
+          "null_count": 60,
+          "null_pct": 0.14,
+          "flag": "PASS"
+        }
+      },
+      "flag": "PASS",
+      "note": "SoC NULL% is the key metric \u2014 F3 auditability depends on it."
+    },
+    "sign": {
+      "pos_tno_soc_decreasing_discharge": 5423,
+      "pos_tno_soc_increasing_anomaly": 153,
+      "neg_tno_soc_increasing_charge": 8129,
+      "neg_tno_soc_decreasing_anomaly": 1645,
+      "skipped_nan_pairs": 0,
+      "total_classified": 15350,
+      "sign_convention_confirmed": true,
+      "note": "positive TNO = export/discharge, confirmed empirically from SoC delta correlation.",
+      "flag": "PASS"
+    }
+  }
+}
