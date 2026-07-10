@@ -1,6 +1,8 @@
 name: ERCOT NP3-965-ER Primary ZIP Retrieval
 
 on:
+  push:
+    branches: [ master ]
   workflow_dispatch:
     inputs:
       month:
