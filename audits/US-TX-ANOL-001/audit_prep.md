@@ -4,7 +4,7 @@
 **Status:** PRE-REGISTRATION — frozen before data acquisition. No SCED data downloaded at commit time.
 **Author:** Ivan Nestorov, VolMax Studio Lab
 **Frozen at:** 2026-07-09T19:54:00+02:00 (amended: +L0d entity flag, +Rule CV, +window-start justification — zero data downloaded at both commits)
-**Commit hash:** `21809f9f68e7a037b9fe20a68c40615efcfadcaa` (post-hoc commit — data pulled before git init; pre-analysis state; see selection_rationale.md § Pre-Registration Commit Gap)
+**Commit hash:** `05cbc2e16d359bee8a5e3c7455b9434c85806261` (post-hoc commit — data pulled before git init; pre-analysis state; see selection_rationale.md § Pre-Registration Commit Gap)
 
 ---
 
