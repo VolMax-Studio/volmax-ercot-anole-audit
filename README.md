@@ -84,7 +84,7 @@ terms (no raw redistribution).
 ## Citation
 
 Nestorov, Ivan (VolMax Studio Lab). *ERCOT Anole ESS Independent Audit
-(US-TX-ANOL-001).* VolMax P10 Verification Protocol v1.0. DOI: [pending].
+(US-TX-ANOL-001).* VolMax P10 Verification Protocol v1.0. DOI: [10.5281/zenodo.21304135](https://doi.org/10.5281/zenodo.21304135).
 
 ---
 *VolMax Studio Lab · Independent verification of battery & energy-storage
