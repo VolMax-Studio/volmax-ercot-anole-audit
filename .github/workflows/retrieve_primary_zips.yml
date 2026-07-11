@@ -39,7 +39,22 @@ jobs:
           else
             echo "MIS_ACCESSIBLE=false" >> $GITHUB_OUTPUT
             echo "❌ ERCOT MIS returned HTTP $HTTP_CODE — WAF or geo-block active on datacenter IPs"
-            cat /tmp/ercot_probe.html | head -50
+          fi
+
+      - name: Probe ERCOT Terms of Use access
+        run: |
+          echo "Testing ERCOT Terms of Use page..."
+          HTTP_CODE=$(curl -s -o /tmp/ercot_tou.html -w "%{http_code}" \
+            --max-time 30 \
+            "https://www.ercot.com/legal/terms")
+          echo "ToU HTTP status: $HTTP_CODE"
+          if [ "$HTTP_CODE" = "200" ]; then
+            echo "✅ ERCOT Terms of Use page is accessible"
+            echo "Verbatim ToU preview:"
+            cat /tmp/ercot_tou.html | head -n 40
+          else
+            echo "❌ ERCOT Terms of Use page returned HTTP $HTTP_CODE"
+            cat /tmp/ercot_tou.html | head -n 40 || true
           fi
 
       - name: Attempt ZIP download (if MIS accessible)
