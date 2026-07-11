@@ -1,0 +1,21 @@
+{
+  "title": "ERCOT Anole BESS Independent Audit (US-TX-ANOL-001)",
+  "description": "Independent verification of the public nameplate claims of the Anole battery energy storage system (ANOL_ESS_ESR1, Seagoville, TX) — 240 MW / 480 MWh — from ERCOT SCED 60-day telemetry, under the VolMax P10 Verification Protocol. Power capacity (F1): Demonstrated. Energy capacity (F2): Demonstrated. SoC telemetry consistency (F3): Inconsistent (per frozen rule; 55.2% pass overall, 81.8% pass for major events). SoC field semantics (F4): Deferred.",
+  "creators": [
+    {
+      "name": "Nestorov, Ivan",
+      "affiliation": "VolMax Studio Lab"
+    }
+  ],
+  "access_right": "open",
+  "license": "CC-BY-4.0",
+  "keywords": [
+    "ERCOT",
+    "BESS",
+    "Telemetry",
+    "Audit",
+    "P10",
+    "Battery Energy Storage",
+    "Anole"
+  ]
+}

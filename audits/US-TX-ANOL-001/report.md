@@ -17,7 +17,7 @@ This audit evaluates the grid-scale performance and physical telemetry consisten
 Based on strict adherence to the frozen rules, the audit renders the following verdicts:
 - **Power Capacity (Claim 001a - 240 MW):** ✅ **Demonstrated** at the SCED model ceiling (max output = 240.0 MW).
 - **Energy Capacity (Claim 001b - 480 MWh):** ✅ **Demonstrated** (largest continuous block = 513.03 MWh, representing 107% of nominal capacity).
-- **SoC Internal Consistency (F3):** ❌ **Inconsistent** under the strict 80% pass rule for all discharge events (55.2% pass rate), but **highly consistent (81.8% pass rate)** when limited to major cycles (≥10 MWh), confirming physical round-trip efficiency bounds in normal operations.
+- **SoC Internal Consistency (F3):** ❌ **Inconsistent** under the strict 80% pass rule for all discharge events (55.2% pass rate), but rises to **81.8%** in an exploratory post-hoc analysis of major events (≥10 MWh). The overall verdict is Inconsistent as the post-hoc threshold was not pre-registered.
 - **SoC Field Interpretation (F4):** ⏳ **Deferred** pending ERCOT column definition documentation (observed max SoC of 560.3 MWh, representing a delta of +80.3 MWh above nominal nameplate).
 
 ---
@@ -68,20 +68,23 @@ A preliminary L1 integrity audit (`l1_integrity.py`) was executed against the ra
 ### F2 — Energy Capacity (Claim 001b: 480 MWh)
 - **Discharge Blocks (≥ 30 min):** 335 blocks identified.
 - **Largest Continuous discharge block:** **513.03 MWh** (exceeding the 480.0 MWh nameplate claim by 6.8%).
-  - **Start Time:** 2026-02-11T23:35:15+00:00 (SoC = 547.67 MWh)
+  - **Start Time:** 2026-02-11T23:35:15+00:00 (SoC = 547.67 MWh, carrying the F4 semantic caveat)
   - **End Time:** 2026-02-12T01:45:17+00:00 (SoC = 11.89 MWh)
   - **Duration:** 2.167 hours
   - **L2 Physics Gate:** Passed (513.03 MWh ≤ 547.67 MWh start SoC; energy is physically consistent with charge depletion).
+  - **Discharge-side SoC-accounting ratio:** 0.958 (a one-way ratio of metered discharge vs. SoC drop, not round-trip efficiency).
 - **Verdict:** ✅ **Demonstrated**
+- *Note:* The F2 verdict stands solely on metered energy (integrated telemetered output of 513.03 MWh), which is fully independent of the operator-reported SoC telemetry.
 
 ### F3 — SoC Internal Consistency (Separate Finding Class)
 This test evaluates the physical relationship between AC-side metered output and DC-side SoC drawdown ($\Delta_{metered} / \Delta_{soc}$). The expected thermodynamic range is $[0.85, 1.0]$.
 - **Total Evaluable events:** 330
 - **Consistent events (ratio in range $[0.85, 1.0]$):** 182 (**55.2%**)
 - **Verdict:** ❌ **Inconsistent** (under strict 80% pass rule)
-- **Analysis Caveat:** 
-  The "Inconsistent" verdict is an artifact of micro-discharge events (< 10 MWh), which are heavily distorted by telemetry timing delays, rounding errors, and BMS self-discharge/auxiliary consumption. 
-  When filtered to **major cycles (energy ≥ 10 MWh)**, which represent the actual commercial operations of the asset, the consistency rate rises to **81.8%** (180 out of 220 events). This is a strong physical validation of the telemetry: the major discharge cycles fall precisely in the expected $[0.85, 1.0]$ efficiency band (overall mean ratio of 0.94 for large cycles).
+- **Exploratory Post-Hoc Stratification:**
+  As a post-hoc analysis (not pre-registered), filtering the events to major discharge cycles (energy ≥ 10 MWh) increases the consistency rate to **81.8%** (180 out of 220 events), clustering in the expected $[0.85, 1.0]$ physical band with a mean ratio of 0.94. This suggests micro-discharges (< 10 MWh) dominate the telemetry inconsistency due to timing skew and self-discharge. This threshold was not pre-registered and serves as a hypothesis for future audits, not a verdict modifier.
+  
+  Within the major cycles, 38 out of 220 events (17.3%) exhibit a consistency ratio strictly greater than 1.0 (ranging from 1.0009 to 1.2545). Since a ratio > 1.0 is thermodynamically impossible, these events are attributed to telemetry lag (SoC update delay relative to SCED net output at block boundaries) and minor BMS calibration offsets.
 
 ### F4 — SoC Field Interpretation
 - **Max `max_soc` column value:** 560.3 MWh
