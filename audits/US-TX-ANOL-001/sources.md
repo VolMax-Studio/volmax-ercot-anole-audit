@@ -84,7 +84,7 @@ report.md (anchor class A, cross-check result recorded)
 
 **Primary ERCOT artifact not retrieved** — ERCOT MIS access blocked by web application firewall at pull time; provenance terminates at third-party rendering (gridstatus.io). This is a structural gap in the chain, not a data quality issue within the gridstatus dataset.
 
-**WAF/Geo-block Verification:** On 2026-07-10, an automated test was run on a US-region GitHub Actions public runner (run ID 29116383279) to probe ERCOT MIS. The probe was blocked by ERCOT's WAF (HTTP status code non-200 or timeout), confirming that ERCOT blocks US datacenter IP ranges in addition to non-US residential traffic. This verifies that automated public CI US-region retrieval is not possible, and validates our Class B anchor designation.
+**WAF/Geo-block Verification:** On 2026-07-10, an automated test was run on a US-region GitHub Actions public runner (run ID 29136602701) to probe ERCOT MIS. Both the MIS portal (NP3-965-ER report list) and the ERCOT Terms of Use page (`https://www.ercot.com/legal/terms`) were probed. Both endpoints blocked the runner with firewall errors or timeouts, confirming that ERCOT WAF blocks US datacenter IP ranges in addition to non-US residential traffic. This verifies that automated public CI US-region retrieval (and automated live pinning of the ToU) is not possible, and validates our Class B anchor designation.
 
 **Hash-pinning scope:** SHA-256 hashes in `data_manifest.json` pin gridstatus.io's rendering at pull time. They do not hash the ERCOT NP3-965-ER correction ZIP artifact. If gridstatus.io re-syncs a late correction after the pull date, hashes will diverge from a fresh pull — this is expected behavior, not tampering.
 

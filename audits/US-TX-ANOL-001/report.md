@@ -40,7 +40,7 @@ The retrieval pipeline for this audit operates under **Anchor Class B (Third-Par
 - **Licensing Constraint:** Raw CSV files are not redistributed in this repository to comply with the gridstatus.io Terms of Use. Verification of data identity is preserved via SHA-256 hashes of all raw monthly chunks in `data_manifest.json`.
 
 ### WAF / Geo-Block Verification
-Due to ERCOT's Web Application Firewall (WAF) blocking non-US residential traffic, automated direct download of primary ERCOT ZIPs was blocked at pull time. On 2026-07-10, an automated check was run on a US-region GitHub Actions public runner (Run ID: `29116383279`) to test direct ERCOT MIS access. The runner returned a firewall block, proving that ERCOT WAF blocks US datacenter IP ranges in addition to residential traffic. The provenance chain therefore terminates at `gridstatus.io`. The manual browser download and row-level cross-check path is preserved in `sources.md` to allow future restoration to Anchor Class A.
+Due to ERCOT's Web Application Firewall (WAF) blocking non-US residential traffic, automated direct download of primary ERCOT ZIPs was blocked at pull time. On 2026-07-10, an automated check was run on a US-region GitHub Actions public runner (Run ID: `29136602701`) to test direct ERCOT MIS and Terms of Use page access. Both requests were blocked by the firewall, proving that ERCOT's WAF blocks US datacenter IP ranges in addition to residential traffic. The provenance chain therefore terminates at `gridstatus.io`. The manual browser download and row-level cross-check path is preserved in `sources.md` to allow future restoration to Anchor Class A.
 
 ---
 
