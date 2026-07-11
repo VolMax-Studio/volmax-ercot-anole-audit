@@ -22,10 +22,7 @@ SCED intervals (~42,900 records).
 2. **SoC is operator-reported state estimation, not an independent
    measurement.** SoC-based findings verify the internal consistency of the
    operator's own SoC accounting — not absolute cell energy.
-3. **SoC field semantics unresolved (F4 deferred).** Observed maximum SoC is
-   558.0 MWh, +80.3 MWh above the public nameplate. Whether this reflects DC
-   oversizing, a different measurement point, or field semantics awaits ERCOT
-   column documentation. All SoC values in this report carry this caveat.
+3. **SoC field semantics unresolved (F4 deferred).** Observed maximum live SoC is 558.0 MWh (+78.0 MWh / +16.25% above the public nameplate), while the maximum capacity limit in the `max_soc` column is 560.3 MWh (+80.3 MWh / +16.73% above the public nameplate). Whether this reflects DC oversizing, a different measurement point, or field semantics awaits ERCOT column documentation. All SoC values in this report carry this caveat.
 4. **5-minute resolution floor.** Sub-interval dynamics are not observable;
    maximum power findings are 5-minute telemetry values.
 5. **Pre-registration disclosure.** Verdict rules (F1–F4) were frozen in a
@@ -41,7 +38,8 @@ SCED intervals (~42,900 records).
 | F1 | 240 MW power capacity | **Demonstrated** | Max telemetered output 240.0 MW — exactly at the HSL/base-point ceiling (SCED model saturation noted) |
 | F2 | 480 MWh energy capacity | **Demonstrated** | Largest contiguous discharge block: **513.03 MWh** over 2.17 h (2026-02-11). Verdict rests on metered energy (∫ telemetered output) alone, independent of the SoC field |
 | F3 | SoC telemetry internal consistency | **Inconsistent** (per frozen rule) | 55.2% of evaluable discharge events fall in the physical band [0.85, 1.00]; frozen threshold was ≥80%. Exploratory post-hoc stratification (not pre-registered): events ≥10 MWh pass at 81.8%, indicating micro-events dominate the inconsistency — recorded as a hypothesis for future pre-registration, not as a verdict modifier |
-| F4 | SoC field semantics | **Deferred** | Max observed SoC 558.0 MWh (+16.7% over nameplate); interpretation awaits official column documentation |
+| F4 | SoC field semantics | **Deferred** | Max observed SoC 558.0 MWh (+16.25% over nameplate), max_soc limit 560.3 MWh (+16.73% over nameplate); interpretation awaits official column documentation |
+
 
 ### Visualized Findings
 
