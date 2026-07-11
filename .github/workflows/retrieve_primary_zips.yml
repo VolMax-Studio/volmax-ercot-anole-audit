@@ -107,5 +107,6 @@ jobs:
           name: ercot-mis-probe-${{ github.run_id }}
           path: |
             /tmp/ercot_probe.html
+            /tmp/ercot_tou.html
             audits/US-TX-ANOL-001/ercot_primary_zips/
           retention-days: 90
