@@ -104,5 +104,13 @@ This test evaluates the physical relationship between AC-side metered output and
 | **F3** | SoC telemetry consistency | ≥ 80% pass | 55.2% (81.8% major) | ❌ **Inconsistent** (caveated) |
 | **F4** | SoC telemetry units/limit | - | Max SoC = 558.0 MWh | ⏳ **Deferred** |
 
+### Visualized Findings
+
+#### Panel 1 — The February 11 Event (513 MWh Continuous Discharge)
+![Panel 1 — The February 11 Event](../../results/panel1_feb11_event.png)
+
+#### Panel 2 — F3 Telemetry Consistency Distribution (F3 Histogram)
+![Panel 2 — F3 Telemetry Consistency Distribution](../../results/panel2_f3_histogram.png)
+
 ---
 *End of Report.*

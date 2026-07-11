@@ -1,6 +1,6 @@
 # US-TX-ANOL-001 — Findings
 
-**Generated:** 2026-07-10T18:56:19.065087+00:00  
+**Generated:** 2026-07-11T02:45:26.057694+00:00  
 **Protocol:** P10 v1.0  
 **Anchor class:** B (gridstatus.io third-party rendering; cross-check pending)  
 **Rows analysed (post-dedup, ON only):** 42,422  

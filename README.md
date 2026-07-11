@@ -15,7 +15,7 @@ SCED intervals (~42,900 records).
 1. **Anchor class B (third-party rendering).** Data was retrieved from the
    gridstatus.io API, not from ERCOT MIS directly. ERCOT's web application
    firewall blocks non-US and public-datacenter IP ranges; a GitHub Actions
-   US-runner probe (run ID 29116383279, log public) was also blocked. The
+   US-runner probe (run ID `29136602701`, log public) was also blocked. The
    provenance chain therefore terminates at gridstatus.io's rendering of the
    ERCOT disclosure; the primary ERCOT artifact is not independently hashed.
    Details in `audits/US-TX-ANOL-001/sources.md`.
@@ -42,6 +42,14 @@ SCED intervals (~42,900 records).
 | F2 | 480 MWh energy capacity | **Demonstrated** | Largest contiguous discharge block: **513.03 MWh** over 2.17 h (2026-02-11). Verdict rests on metered energy (∫ telemetered output) alone, independent of the SoC field |
 | F3 | SoC telemetry internal consistency | **Inconsistent** (per frozen rule) | 55.2% of evaluable discharge events fall in the physical band [0.85, 1.00]; frozen threshold was ≥80%. Exploratory post-hoc stratification (not pre-registered): events ≥10 MWh pass at 81.8%, indicating micro-events dominate the inconsistency — recorded as a hypothesis for future pre-registration, not as a verdict modifier |
 | F4 | SoC field semantics | **Deferred** | Max observed SoC 558.0 MWh (+16.7% over nameplate); interpretation awaits official column documentation |
+
+### Visualized Findings
+
+#### Panel 1 — The February 11 Event (513 MWh Continuous Discharge)
+![Panel 1 — The February 11 Event](results/panel1_feb11_event.png)
+
+#### Panel 2 — F3 Telemetry Consistency Distribution (F3 Histogram)
+![Panel 2 — F3 Telemetry Consistency Distribution](results/panel2_f3_histogram.png)
 
 The largest F2 block drew SoC from 547.67 to 11.89 MWh; the discharge-side
 SoC-accounting ratio for that event is 0.958 (this is a one-way

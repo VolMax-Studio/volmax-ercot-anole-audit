@@ -32,6 +32,7 @@ from collections import defaultdict
 RAW_DATA_DIR  = Path(__file__).parent / "audits" / "US-TX-ANOL-001" / "raw_data"
 METRICS_PATH  = Path(__file__).parent / "audits" / "US-TX-ANOL-001" / "metrics.json"
 FINDINGS_PATH = Path(__file__).parent / "audits" / "US-TX-ANOL-001" / "findings.md"
+RESULTS_DIR   = Path(__file__).parent / "results"
 
 # ── Frozen constants from audit_prep.md ───────────────────────────────────────
 NAMEPLATE_MW    = 240.0   # Claim 001a
@@ -558,6 +559,122 @@ def write_findings(m: dict, path: Path):
     path.write_text("\n".join(l for l in lines), encoding="utf-8")
 
 
+def generate_plots(rows: list[dict], blocks: list[dict], output_dir: Path):
+    import matplotlib.pyplot as plt
+    import matplotlib.dates as mdates
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # ── Panel 1: February 11 Event ───────────────────────────────────────────
+    # Date range: 2026-02-11 23:00 to 2026-02-12 02:30 UTC
+    t_start = datetime.datetime(2026, 2, 11, 23, 0, tzinfo=datetime.timezone.utc)
+    t_end = datetime.datetime(2026, 2, 12, 2, 30, tzinfo=datetime.timezone.utc)
+    event_rows = [r for r in rows if r["_ts"] and t_start <= r["_ts"] <= t_end]
+
+    if event_rows:
+        fig, ax1 = plt.subplots(figsize=(16, 9), dpi=100)
+
+        times = [r["_ts"] for r in event_rows]
+        pwr = [r["_tno"] for r in event_rows]
+        soc = [r["_soc"] for r in event_rows]
+
+        # Left Axis: Power (Net Output MW)
+        color = '#1f77b4'
+        ax1.set_xlabel('Time (UTC) — February 11-12, 2026', fontsize=16, labelpad=15)
+        ax1.set_ylabel('Telemetered Net Output (MW)', color=color, fontsize=16)
+        line1, = ax1.plot(times, pwr, color=color, linewidth=2.5, label='Net Output (MW)')
+        ax1.tick_params(axis='y', labelcolor=color, labelsize=14)
+        ax1.tick_params(axis='x', labelsize=14)
+        ax1.set_ylim(-300, 300)
+        ax1.grid(True, linestyle=':', alpha=0.6)
+
+        # Right Axis: State of Charge (SoC MWh)
+        ax2 = ax1.twinx()
+        color_soc = '#d62728'
+        ax2.set_ylabel('State of Charge (MWh)', color=color_soc, fontsize=16)
+        line2, = ax2.plot(times, soc, color=color_soc, linestyle='--', linewidth=2.5, label='State of Charge (MWh)')
+        ax2.tick_params(axis='y', labelcolor=color_soc, labelsize=14)
+        ax2.set_ylim(0, 600)
+
+        # Horizontal reference line for Nameplate 480 MWh
+        ref_line = ax2.axhline(480.0, color='gray', linestyle=':', linewidth=1.5, label='480 MWh Nameplate')
+
+        # Annotation for the 513 MWh discharge block
+        annot_x = datetime.datetime(2026, 2, 12, 0, 40, tzinfo=datetime.timezone.utc)
+        ax2.annotate('513.03 MWh Continuous Discharge\n(SoC: 547.67 \u2192 11.89 MWh)',
+                     xy=(annot_x, 280), xycoords='data',
+                     xytext=(datetime.datetime(2026, 2, 11, 23, 10, tzinfo=datetime.timezone.utc), 120), textcoords='data',
+                     arrowprops=dict(facecolor='black', shrink=0.08, width=1.5, headwidth=8),
+                     fontsize=14, fontweight='bold', bbox=dict(boxstyle="round,pad=0.5", fc="yellow", alpha=0.8))
+
+        # Title and Legends
+        plt.title('esVolta Anole BESS (ANOL_ESS_ESR1) \u2014 513 MWh Continuous Discharge Event', fontsize=18, fontweight='bold', pad=20)
+
+        # Combine legends
+        lines_all = [line1, line2, ref_line]
+        labels = [l.get_label() for l in lines_all]
+        ax1.legend(lines_all, labels, loc='lower left', fontsize=14)
+
+        fig.autofmt_xdate()
+        ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M'))
+
+        fig.tight_layout()
+        plt.savefig(output_dir / 'panel1_feb11_event.png', dpi=100)
+        plt.close()
+        print(f"Saved Panel 1 plot to {output_dir / 'panel1_feb11_event.png'}")
+
+    # ── Panel 2: F3 Histogram ────────────────────────────────────────────────
+    evaluable = []
+    for b in blocks:
+        soc_s = b.get("soc_start")
+        soc_e = b.get("soc_end")
+        mwh   = b.get("mwh")
+        if soc_s is None or soc_e is None or mwh is None:
+            continue
+        if math.isnan(soc_s) or math.isnan(soc_e):
+            continue
+        delta_soc = soc_s - soc_e
+        if delta_soc <= 0:
+            continue
+        evaluable.append(mwh / delta_soc)
+
+    if evaluable:
+        fig, ax = plt.subplots(figsize=(16, 9), dpi=100)
+
+        # Histogram plot
+        ax.hist(evaluable, bins=60, range=(0.0, 2.0), color='#1f77b4', edgecolor='black', alpha=0.8)
+
+        # Highlight physical band [0.85, 1.00]
+        ax.axvspan(0.85, 1.00, color='green', alpha=0.15, label='Physical Band [0.85, 1.00]')
+
+        # Formatting
+        ax.set_xlabel('Consistency Ratio (Metered Discharge MWh / Telemetered SoC Delta)', fontsize=16, labelpad=15)
+        ax.set_ylabel('Number of Discharge Events', fontsize=16)
+        ax.tick_params(labelsize=14)
+        ax.set_xlim(0.4, 1.6)
+        ax.grid(True, linestyle=':', alpha=0.6)
+
+        # Text box indicating verdict
+        textstr = '\n'.join((
+            r'$\bf{Verdict: Inconsistent}$',
+            'Pre-registered rule: \u2265 80% in band',
+            'Observed pass rate: 55.2% (182 / 330 events)',
+            'Mean Ratio: 0.963'
+        ))
+
+        props = dict(boxstyle='round,pad=0.8', facecolor='wheat', alpha=0.9)
+        ax.text(0.05, 0.95, textstr, transform=ax.transAxes, fontsize=14,
+                verticalalignment='top', bbox=props)
+
+        plt.title('US-TX-ANOL-001: F3 SoC telemetry consistency distribution', fontsize=18, fontweight='bold', pad=20)
+        ax.legend(loc='upper right', fontsize=14)
+
+        fig.tight_layout()
+        plt.savefig(output_dir / 'panel2_f3_histogram.png', dpi=100)
+        plt.close()
+        print(f"Saved Panel 2 plot to {output_dir / 'panel2_f3_histogram.png'}")
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -599,6 +716,8 @@ def main():
 
     METRICS_PATH.write_text(json.dumps(metrics, indent=2, default=str), encoding="utf-8")
     write_findings(metrics, FINDINGS_PATH)
+    print("Generating plots...")
+    generate_plots(rows, blocks, RESULTS_DIR)
 
     # Console summary
     print(f"\n{'='*58}")
