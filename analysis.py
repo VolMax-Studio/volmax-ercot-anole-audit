@@ -655,11 +655,14 @@ def generate_plots(rows: list[dict], blocks: list[dict], output_dir: Path):
         ax.grid(True, linestyle=':', alpha=0.6)
 
         # Text box indicating verdict
+        in_band = sum(1 for r in evaluable if 0.85 <= r <= 1.00)
+        pass_rate = (in_band / len(evaluable)) * 100
+        mean_ratio = sum(evaluable) / len(evaluable)
         textstr = '\n'.join((
             r'$\bf{Verdict: Inconsistent}$',
             'Pre-registered rule: \u2265 80% in band',
-            'Observed pass rate: 55.2% (182 / 330 events)',
-            'Mean Ratio: 0.963'
+            f'Observed pass rate: {pass_rate:.1f}% ({in_band} / {len(evaluable)} events)',
+            f'Mean Ratio: {mean_ratio:.3f}'
         ))
 
         props = dict(boxstyle='round,pad=0.8', facecolor='wheat', alpha=0.9)

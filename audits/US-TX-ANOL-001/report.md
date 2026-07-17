@@ -77,14 +77,47 @@ A preliminary L1 integrity audit (`l1_integrity.py`) was executed against the ra
 - *Note:* The F2 verdict stands solely on metered energy (integrated telemetered output of 513.03 MWh), which is fully independent of the operator-reported SoC telemetry.
 
 ### F3 — SoC Internal Consistency (Separate Finding Class)
-This test evaluates the physical relationship between AC-side metered output and DC-side SoC drawdown ($\Delta_{metered} / \Delta_{soc}$). The expected thermodynamic range is $[0.85, 1.0]$.
-- **Total Evaluable events:** 330
-- **Consistent events (ratio in range $[0.85, 1.0]$):** 182 (**55.2%**)
-- **Verdict:** ❌ **Inconsistent** (under strict 80% pass rule)
-- **Exploratory Post-Hoc Stratification:**
-  As a post-hoc analysis (not pre-registered), filtering the events to major discharge cycles (energy ≥ 10 MWh) increases the consistency rate to **81.8%** (180 out of 220 events), clustering in the expected $[0.85, 1.0]$ physical band with a mean ratio of 0.98. This suggests micro-discharges (< 10 MWh) dominate the telemetry inconsistency due to timing skew and self-discharge. This threshold was not pre-registered and serves as a hypothesis for future audits, not a verdict modifier.
-  
-  Within the major cycles, 38 out of 220 events (17.3%) exhibit a consistency ratio strictly greater than 1.0 (ranging from 1.0009 to 1.2545). Since a ratio > 1.0 is thermodynamically impossible, these events are attributed to telemetry lag (SoC update delay relative to SCED net output at block boundaries) and minor BMS calibration offsets.
+
+This test evaluates the relationship between AC-side metered output and reported
+SoC drawdown ($\Delta_{metered} / \Delta_{soc}$) against the pre-registered
+expectation band $[0.85, 1.0]$. The band is a frozen rule, not a physical
+constant: it encodes an assumption that the `soc` field is denominated in
+delivered energy. ERCOT does not document that assumption (see F4).
+
+- **Total evaluable events:** 330
+- **Events inside the band:** 182 (**55.2%**)
+- **Verdict:** ❌ **Inconsistent** (under the strict 80% pass rule)
+
+**Exploratory post-hoc stratification (not pre-registered).**
+
+Restricting to major discharge cycles (≥ 10 MWh) raises the in-band rate to
+**81.8%** (180 of 220 events). Two means apply here and must not be conflated:
+
+| Population | n | Mean ratio |
+| :--- | ---: | ---: |
+| All major events | 220 | **0.9809** |
+| Major events inside the band | 180 | 0.9740 |
+
+Micro-discharges (< 10 MWh) therefore dominate the overall inconsistency, which
+is consistent with timing skew and self-discharge. This threshold was not
+pre-registered and serves as a hypothesis for future audits, not a verdict
+modifier.
+
+**Reconstruction noise floor.** Within the major cycles, 38 of 220 events
+(17.3%) return a ratio strictly greater than 1.0, ranging from 1.0009 to 1.2545.
+A discharge cannot meter out more energy than left the store, so these values do
+not describe the asset — they bound the noise in our own reconstruction, arising
+from SoC update lag relative to SCED net output at block boundaries and from
+minor BMS calibration offsets. The major-cycle distribution has a standard
+deviation of 0.0377 about a mean of 0.9809, placing 1.0 only **+0.51σ** from the
+centre; a substantial exceedance count is therefore expected under this noise,
+and 38 is in fact fewer than the ~67 a Gaussian would predict.
+
+**What the pass rate measures.** Because the band is fixed at $[0.85, 1.0]$, the
+in-band rate is determined largely by where the ratio distribution is centred
+relative to that band, not by how tightly it is clustered. A high pass rate here
+reflects a centre near 1.0. On its own it is not evidence of telemetry quality.
+See `US-TX-BATC-001` §5 for the cross-audit consequence.
 
 ### F4 — SoC Field Interpretation
 - **Max `max_soc` column value:** 560.3 MWh
