@@ -82,7 +82,7 @@ This test evaluates the physical relationship between AC-side metered output and
 - **Consistent events (ratio in range $[0.85, 1.0]$):** 182 (**55.2%**)
 - **Verdict:** ❌ **Inconsistent** (under strict 80% pass rule)
 - **Exploratory Post-Hoc Stratification:**
-  As a post-hoc analysis (not pre-registered), filtering the events to major discharge cycles (energy ≥ 10 MWh) increases the consistency rate to **81.8%** (180 out of 220 events), clustering in the expected $[0.85, 1.0]$ physical band with a mean ratio of 0.94. This suggests micro-discharges (< 10 MWh) dominate the telemetry inconsistency due to timing skew and self-discharge. This threshold was not pre-registered and serves as a hypothesis for future audits, not a verdict modifier.
+  As a post-hoc analysis (not pre-registered), filtering the events to major discharge cycles (energy ≥ 10 MWh) increases the consistency rate to **81.8%** (180 out of 220 events), clustering in the expected $[0.85, 1.0]$ physical band with a mean ratio of 0.98. This suggests micro-discharges (< 10 MWh) dominate the telemetry inconsistency due to timing skew and self-discharge. This threshold was not pre-registered and serves as a hypothesis for future audits, not a verdict modifier.
   
   Within the major cycles, 38 out of 220 events (17.3%) exhibit a consistency ratio strictly greater than 1.0 (ranging from 1.0009 to 1.2545). Since a ratio > 1.0 is thermodynamically impossible, these events are attributed to telemetry lag (SoC update delay relative to SCED net output at block boundaries) and minor BMS calibration offsets.
 
